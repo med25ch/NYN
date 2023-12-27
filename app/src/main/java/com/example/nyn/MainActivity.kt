@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun NynApp(modifier: Modifier = Modifier) {
     Text(
-        text = "NYN",
+        text = "NYN 2023-12-27",
         modifier = modifier
     )
 }
