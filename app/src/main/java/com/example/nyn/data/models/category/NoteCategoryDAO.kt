@@ -1,4 +1,4 @@
-package com.example.nyn.data.category
+package com.example.nyn.data.models.category
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.nyn.data.note.Note
+import com.example.nyn.data.models.category.NoteCategory
 import kotlinx.coroutines.flow.Flow
 
 @Dao
