@@ -1,4 +1,4 @@
-package com.example.nyn.data.category
+package com.example.nyn.data.models.category
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

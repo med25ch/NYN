@@ -1,7 +1,6 @@
 package com.example.nyn.data.repositories
 
-import com.example.nyn.data.category.NoteCategory
-import com.example.nyn.data.note.Note
+import com.example.nyn.data.models.category.NoteCategory
 import kotlinx.coroutines.flow.Flow
 
 /**

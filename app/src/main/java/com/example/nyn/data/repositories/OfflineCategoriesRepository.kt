@@ -1,10 +1,11 @@
 package com.example.nyn.data.repositories
 
-import com.example.nyn.data.category.NoteCategory
-import com.example.nyn.data.category.NoteCategoryDAO
+import com.example.nyn.data.models.category.NoteCategory
+import com.example.nyn.data.models.category.NoteCategoryDAO
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class OfflineCategoriesRepository(private val noteCategoryDAO: NoteCategoryDAO) : CategoriesRepository {
+class OfflineCategoriesRepository @Inject constructor (private val noteCategoryDAO: NoteCategoryDAO) : CategoriesRepository {
     override fun getAllNoteCategoriesStream(): Flow<List<NoteCategory>> {
         return noteCategoryDAO.getAllNotesCategories()
     }

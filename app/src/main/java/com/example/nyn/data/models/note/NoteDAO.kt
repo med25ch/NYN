@@ -1,4 +1,4 @@
-package com.example.nyn.data.note
+package com.example.nyn.data.models.note
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,7 +6,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.nyn.data.category.NoteCategory
+import com.example.nyn.data.models.category.NoteCategory
+import com.example.nyn.data.models.note.Note
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -27,5 +28,5 @@ interface NoteDAO {
     fun getAllNotes(): Flow<List<Note>>
 
     @Query("SELECT * from notes_table WHERE category = :category")
-    fun getNotesByCategory(category: NoteCategory): Flow<Note>
+    fun getNotesByCategory(category: String): Flow<List<Note>>
 }
