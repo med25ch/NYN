@@ -1,48 +1,52 @@
 package com.example.nyn.noteui
 
-import android.widget.Space
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.PushPin
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.nyn.data.models.note.Note
 import com.example.nyn.ui.theme.CustomLightGray
-import com.example.nyn.ui.theme.NYNTheme
 import com.example.nyn.ui.theme.Sen
 
 
 @Composable
-fun NoteCard(modifier: Modifier = Modifier){
+fun NoteCard(modifier: Modifier = Modifier,
+             note : Note){
+
      Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(15.dp)
+            .padding(5.dp)
             .clickable { },
     ) {
         Column(
-            modifier = Modifier.padding(15.dp)
+            modifier = Modifier.padding(10.dp)
         ) {
             Row {
                 Text(
-                    text = "Note Title",
+                    text = note.title,
                     modifier = Modifier.weight(1f),
                     fontFamily = Sen,
                     fontStyle = FontStyle.Normal,
@@ -58,9 +62,7 @@ fun NoteCard(modifier: Modifier = Modifier){
             }
             Spacer(modifier = Modifier.size(10.dp))
             Text(
-                text = "Article nor prepare chicken you him now. Shy merits say advice ten before lovers innate add. She cordially behaviour can attempted estimable. Trees delay fancy noise manor do as an small. " +
-                        "Felicity now law securing breeding likewise extended and. " +
-                        "Roused either who favour why ham.",
+                text = note.body,
                 maxLines = 4,
                 overflow = TextOverflow.Ellipsis,
                 fontFamily = Sen,
@@ -72,10 +74,29 @@ fun NoteCard(modifier: Modifier = Modifier){
     }
 }
 
-@Preview(showBackground = true)
+
 @Composable
-fun NoteCardPreview() {
-    NYNTheme {
-        NoteCard()
-    }
+fun NotesLazyStaggeredGrid(modifier: Modifier = Modifier, viewModel: NoteViewModel = viewModel()
+){
+    val homeUiState by viewModel.homeUiState.collectAsState()
+
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Fixed(2),
+        verticalItemSpacing = 4.dp,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        content = {
+            items(items = homeUiState.notesList) {note ->
+                NoteCard(note = note)
+            }
+        }
+    )
 }
+
+
+//@Preview(showBackground = true)
+//@Composable
+//fun NoteCardPreview() {
+//    NYNTheme {
+//        //NoteCard()
+//    }
+//}

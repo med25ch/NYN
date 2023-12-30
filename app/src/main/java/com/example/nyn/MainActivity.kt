@@ -6,10 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.nyn.screens.ScaffoldNYN
 import com.example.nyn.ui.theme.NYNTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,16 +33,13 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun NynApp(modifier: Modifier = Modifier) {
-    Text(
-        text = "NYN 2023-12-27",
-        modifier = modifier
-    )
+    ScaffoldNYN()
 }
 
 @Preview(showBackground = true)
 @Composable
 fun NynAppPreview() {
     NYNTheme {
-        NynApp()
+        ScaffoldNYN()
     }
 }
