@@ -2,9 +2,13 @@ package com.example.nyn.data.repositories
 
 import com.example.nyn.data.models.note.Note
 import com.example.nyn.data.models.note.NoteDAO
+import dagger.Module
+import dagger.hilt.InstallIn
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class OfflineNotesRepository @Inject constructor (private val noteDAO: NoteDAO) : NotesRepository{
     override fun getAllNotesStream(): Flow<List<Note>> {
         return noteDAO.getAllNotes()

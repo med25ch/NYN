@@ -1,8 +1,6 @@
 package com.example.nyn.data.database
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.nyn.data.models.category.NoteCategory
 import com.example.nyn.data.models.category.NoteCategoryDAO

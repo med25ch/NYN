@@ -31,9 +31,10 @@ object AppModule {
     fun provideNoteDao(notesDataBase: NotesDataBase) : NoteDAO{
         return notesDataBase.noteDao()
     }
+
     @Provides
     @Singleton
-    fun provideNotesRepository(noteDAO: NoteDAO): OfflineNotesRepository {
+    fun providesNotesRepository(noteDAO: NoteDAO): OfflineNotesRepository {
         return OfflineNotesRepository(noteDAO)
     }
 
@@ -44,7 +45,7 @@ object AppModule {
     }
     @Provides
     @Singleton
-    fun provideCategoriesRepository(noteCategoryDAO: NoteCategoryDAO): OfflineCategoriesRepository {
+    fun providesCategoriesRepository(noteCategoryDAO: NoteCategoryDAO): OfflineCategoriesRepository {
         return OfflineCategoriesRepository(noteCategoryDAO)
     }
 }
