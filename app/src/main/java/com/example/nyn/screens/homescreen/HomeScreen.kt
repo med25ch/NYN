@@ -1,4 +1,4 @@
-package com.example.nyn.screens
+package com.example.nyn.screens.homescreen
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -37,16 +40,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.nyn.navigation.Screen
-import com.example.nyn.noteui.HomeScreenViewModel
-import com.example.nyn.noteui.NoteUiState
-import com.example.nyn.noteui.NotesLazyStaggeredGrid
+import com.example.nyn.noteui.NoteCard
 import com.example.nyn.ui.theme.CustomLightGray
-import com.example.nyn.ui.theme.NYNTheme
 import com.example.nyn.ui.theme.Sen
 import com.example.nyn.ui.theme.VeryLightGray
 
@@ -182,5 +180,22 @@ fun SearchBar(modifier: Modifier = Modifier){
     ) {
 
     }
+}
+
+@Composable
+fun NotesLazyStaggeredGrid(modifier: Modifier = Modifier, homeScreenViewModel: HomeScreenViewModel){
+
+    val homeUiState by homeScreenViewModel.homeUiState.collectAsState()
+
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Fixed(2),
+        verticalItemSpacing = 4.dp,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        content = {
+            items(items = homeUiState.notesList) {note ->
+                NoteCard(note = note)
+            }
+        }
+    )
 }
 

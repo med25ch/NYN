@@ -1,4 +1,4 @@
-package com.example.nyn.noteui
+package com.example.nyn.screens.homescreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

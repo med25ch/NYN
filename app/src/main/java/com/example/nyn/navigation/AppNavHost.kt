@@ -6,9 +6,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.nyn.noteui.HomeScreenViewModel
-import com.example.nyn.screens.AddNoteScreen
-import com.example.nyn.screens.HomeScreen
+import com.example.nyn.screens.homescreen.HomeScreenViewModel
+import com.example.nyn.screens.addnotescreen.AddNoteScreen
+import com.example.nyn.screens.addnotescreen.AddNoteViewModel
+import com.example.nyn.screens.homescreen.HomeScreen
 
 
 @Composable
@@ -28,7 +29,8 @@ fun AppNavHost(
             HomeScreen(navHostController = navController,homeScreenViewModel = viewModel)
         }
         composable(NavigationItem.AddNoteScreen.route) {
-            AddNoteScreen(navHostController = navController)
+            val viewModel = hiltViewModel<AddNoteViewModel>()
+            AddNoteScreen(navHostController = navController, addNoteViewModel = viewModel)
         }
     }
 }
