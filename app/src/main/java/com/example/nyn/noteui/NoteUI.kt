@@ -25,7 +25,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nyn.data.models.note.Note
 import com.example.nyn.ui.theme.CustomLightGray
 import com.example.nyn.ui.theme.Sen
@@ -76,9 +75,9 @@ fun NoteCard(modifier: Modifier = Modifier,
 
 
 @Composable
-fun NotesLazyStaggeredGrid(modifier: Modifier = Modifier, viewModel: NoteViewModel = viewModel()
-){
-    val homeUiState by viewModel.homeUiState.collectAsState()
+fun NotesLazyStaggeredGrid(modifier: Modifier = Modifier, homeScreenViewModel: HomeScreenViewModel){
+
+    val homeUiState by homeScreenViewModel.homeUiState.collectAsState()
 
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),

@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class NoteViewModel @Inject constructor(private val repo: OfflineNotesRepository) : ViewModel() {
+class HomeScreenViewModel @Inject constructor(private val repo: OfflineNotesRepository) : ViewModel() {
 
     val homeUiState: StateFlow<NoteUiState> =
         repo.getAllNotesStream().map { NoteUiState(it) }

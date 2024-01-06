@@ -2,7 +2,16 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="AddNoteScreen">
+        <State />
+      </entry>
+      <entry key="AddNoteScreenScaffold">
+        <State />
+      </entry>
       <entry key="NynAppPreview">
+        <State />
+      </entry>
+      <entry key="TitleBodyText">
         <State />
       </entry>
       <entry key="app">

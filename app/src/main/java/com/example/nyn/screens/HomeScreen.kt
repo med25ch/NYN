@@ -26,6 +26,7 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +39,11 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import com.example.nyn.navigation.Screen
+import com.example.nyn.noteui.HomeScreenViewModel
+import com.example.nyn.noteui.NoteUiState
 import com.example.nyn.noteui.NotesLazyStaggeredGrid
 import com.example.nyn.ui.theme.CustomLightGray
 import com.example.nyn.ui.theme.NYNTheme
@@ -47,7 +53,10 @@ import com.example.nyn.ui.theme.VeryLightGray
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldNYN(modifier: Modifier = Modifier) {
+fun ScaffoldNYN(modifier: Modifier = Modifier,
+                navHostController: NavHostController,
+                homeScreenViewModel: HomeScreenViewModel
+) {
     var presses by remember { mutableIntStateOf(0) }
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
@@ -56,7 +65,7 @@ fun ScaffoldNYN(modifier: Modifier = Modifier) {
                  SmallTopAppBar(modifier,scrollBehavior)
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { presses++ },
+            FloatingActionButton(onClick = { navHostController.navigate(Screen.ADD_NOTE.name) },
                 containerColor = Color.DarkGray,
                 contentColor = Color.White,
             ) {
@@ -75,9 +84,21 @@ fun ScaffoldNYN(modifier: Modifier = Modifier) {
             SearchBar(modifier)
 
             // Staggered Grid of notes
-            NotesLazyStaggeredGrid(modifier)
+            NotesLazyStaggeredGrid(modifier,homeScreenViewModel)
         }
     }
+}
+
+
+@Composable
+fun HomeScreen(modifier: Modifier = Modifier,
+               homeScreenViewModel: HomeScreenViewModel,
+               navHostController: NavHostController
+){
+
+    ScaffoldNYN(modifier = modifier,
+        homeScreenViewModel = homeScreenViewModel,
+        navHostController = navHostController)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -163,10 +184,3 @@ fun SearchBar(modifier: Modifier = Modifier){
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun NynAppPreview() {
-    NYNTheme {
-        //ScaffoldNYN()
-    }
-}
