@@ -6,10 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.nyn.screens.ScaffoldNYN
+import androidx.navigation.compose.rememberNavController
+import com.example.nyn.navigation.AppNavHost
 import com.example.nyn.ui.theme.NYNTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,22 +23,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NynApp()
+                    AppNavHost(navController = rememberNavController())
                 }
             }
         }
-    }
-}
-
-@Composable
-fun NynApp(modifier: Modifier = Modifier) {
-    ScaffoldNYN()
-}
-
-@Preview(showBackground = true)
-@Composable
-fun NynAppPreview() {
-    NYNTheme {
-        ScaffoldNYN()
     }
 }
