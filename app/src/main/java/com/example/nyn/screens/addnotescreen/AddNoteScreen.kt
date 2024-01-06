@@ -41,7 +41,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddNoteScreenScaffold(modifier: Modifier = Modifier,
-                          addNoteViewModel: AddNoteViewModel){
+                          addNoteViewModel: AddNoteViewModel,
+                          navHostController: NavHostController,){
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val coroutineScope = rememberCoroutineScope()
@@ -63,7 +64,7 @@ fun AddNoteScreenScaffold(modifier: Modifier = Modifier,
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* do something */ }) {
+                    IconButton(onClick = { navHostController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Localized description"
@@ -89,6 +90,7 @@ fun AddNoteScreenScaffold(modifier: Modifier = Modifier,
                         coroutineScope.launch {
                             addNoteViewModel.saveNoteToDB()
                         }
+                        navHostController.popBackStack()
                     }) {
                         Icon(
                             imageVector = Icons.Filled.Save,
@@ -118,7 +120,9 @@ fun AddNoteScreen(modifier: Modifier = Modifier,
                   navHostController: NavHostController,
                   addNoteViewModel: AddNoteViewModel){
 
-    AddNoteScreenScaffold( modifier = modifier, addNoteViewModel = addNoteViewModel)
+    AddNoteScreenScaffold( modifier = modifier,
+        addNoteViewModel = addNoteViewModel,
+        navHostController = navHostController)
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
