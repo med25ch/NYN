@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -42,7 +43,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddNoteScreenScaffold(modifier: Modifier = Modifier,
                           addNoteViewModel: AddNoteViewModel,
-                          navHostController: NavHostController,){
+                          navHostController: NavHostController,
+                          onShowSheet: () -> Unit){
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val coroutineScope = rememberCoroutineScope()
@@ -72,7 +74,7 @@ fun AddNoteScreenScaffold(modifier: Modifier = Modifier,
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* do something */ }) {
+                    IconButton(onClick = { onShowSheet() }) {
                         Icon(
                             imageVector = Icons.Filled.CreateNewFolder,
                             contentDescription = "Localized description"
@@ -120,9 +122,15 @@ fun AddNoteScreen(modifier: Modifier = Modifier,
                   navHostController: NavHostController,
                   addNoteViewModel: AddNoteViewModel){
 
+    var showSheet by remember { mutableStateOf(false) }
+
+    if (showSheet) {
+        BottomSheet(modifier = modifier, onDismiss = {showSheet = false})
+    }
     AddNoteScreenScaffold( modifier = modifier,
         addNoteViewModel = addNoteViewModel,
-        navHostController = navHostController)
+        navHostController = navHostController,
+        onShowSheet = { showSheet = true })
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
