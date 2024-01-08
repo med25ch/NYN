@@ -1,6 +1,7 @@
 package com.example.nyn.screens.addnotescreen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,8 +25,10 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,11 +40,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.nyn.ui.theme.CustomLightGray
 import com.example.nyn.ui.theme.Sen
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomSheet(onDismiss: () -> Unit,modifier: Modifier = Modifier) {
+fun BottomSheet(onDismiss: () -> Unit,
+                addNoteViewModel: AddNoteViewModel,
+                modifier: Modifier = Modifier) {
+
     val modalBottomSheetState = rememberModalBottomSheetState()
+    val coroutineScope = rememberCoroutineScope()
 
     ModalBottomSheet(
         onDismissRequest = { onDismiss() },
@@ -49,14 +57,18 @@ fun BottomSheet(onDismiss: () -> Unit,modifier: Modifier = Modifier) {
         dragHandle = { BottomSheetDefaults.DragHandle() },
     ) {
 
-        AddNewCategoryUi(modifier)
-        //CountryList()
+        AddNewCategoryUi(modifier) {
+            coroutineScope.launch {
+                addNoteViewModel.saveCategoryToDB(it)
+            }
+        }
+
+        CategoryList(addNoteViewModel)
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun AddNewCategoryUi(modifier: Modifier = Modifier){
+fun AddNewCategoryUi(modifier: Modifier = Modifier,onSaveCategory: (String) -> Unit){
     //Category input
     var value by rememberSaveable { mutableStateOf("add a new category") }
 
@@ -79,7 +91,11 @@ fun AddNewCategoryUi(modifier: Modifier = Modifier){
                         .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(Icons.Outlined.CreateNewFolder, contentDescription = null)
+                        Icon(Icons.Outlined.CreateNewFolder,
+                            contentDescription = null,
+                            Modifier.clickable {
+                                onSaveCategory(value)
+                            })
                         Spacer(Modifier.width(16.dp))
                         innerTextField()
                     }
@@ -91,33 +107,18 @@ fun AddNewCategoryUi(modifier: Modifier = Modifier){
 }
 
 @Composable
-fun CountryList() {
-    val countries = listOf(
-        Pair("United States", "\uD83C\uDDFA\uD83C\uDDF8"),
-        Pair("Canada", "\uD83C\uDDE8\uD83C\uDDE6"),
-        Pair("India", "\uD83C\uDDEE\uD83C\uDDF3"),
-        Pair("Germany", "\uD83C\uDDE9\uD83C\uDDEA"),
-        Pair("France", "\uD83C\uDDEB\uD83C\uDDF7"),
-        Pair("Japan", "\uD83C\uDDEF\uD83C\uDDF5"),
-        Pair("China", "\uD83C\uDDE8\uD83C\uDDF3"),
-        Pair("Brazil", "\uD83C\uDDE7\uD83C\uDDF7"),
-        Pair("Australia", "\uD83C\uDDE6\uD83C\uDDFA"),
-        Pair("Russia", "\uD83C\uDDF7\uD83C\uDDFA"),
-        Pair("United Kingdom", "\uD83C\uDDEC\uD83C\uDDE7"),
-    )
+fun CategoryList(addNoteViewModel: AddNoteViewModel) {
+
+    val categoriesUiState by addNoteViewModel.categoriesUiState.collectAsState()
 
     LazyColumn {
-        items(countries) { (country, flag) ->
+        items(items = categoriesUiState.repoList) { category ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 10.dp, horizontal = 20.dp)
             ) {
-                Text(
-                    text = flag,
-                    modifier = Modifier.padding(end = 20.dp)
-                )
-                Text(text = country)
+                Text(text = category.name)
             }
         }
     }
