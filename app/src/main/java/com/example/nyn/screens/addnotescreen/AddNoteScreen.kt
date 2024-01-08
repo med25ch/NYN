@@ -125,7 +125,9 @@ fun AddNoteScreen(modifier: Modifier = Modifier,
     var showSheet by remember { mutableStateOf(false) }
 
     if (showSheet) {
-        BottomSheet(modifier = modifier, onDismiss = {showSheet = false})
+        BottomSheet(modifier = modifier,
+            onDismiss = {showSheet = false},
+            addNoteViewModel = addNoteViewModel)
     }
     AddNoteScreenScaffold( modifier = modifier,
         addNoteViewModel = addNoteViewModel,
