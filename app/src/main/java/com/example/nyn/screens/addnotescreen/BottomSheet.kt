@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CreateNewFolder
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DriveFolderUpload
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.outlined.CreateNewFolder
@@ -38,6 +39,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.nyn.data.models.category.NoteCategory
 import com.example.nyn.ui.theme.CustomLightGray
 import com.example.nyn.ui.theme.Sen
 import kotlinx.coroutines.launch
@@ -63,7 +65,7 @@ fun BottomSheet(onDismiss: () -> Unit,
             }
         }
 
-        CategoryList(addNoteViewModel)
+        CategoryList(addNoteViewModel,modifier)
     }
 }
 
@@ -86,7 +88,10 @@ fun AddNewCategoryUi(modifier: Modifier = Modifier,onSaveCategory: (String) -> U
                     // Modifier.clickable to the Row anymore to bring the text field into focus when user
                     // taps on a larger text field area which includes paddings and the icon areas.
                     Row(modifier= Modifier
-                        .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(percent = 20))
+                        .background(
+                            MaterialTheme.colorScheme.surface,
+                            RoundedCornerShape(percent = 20)
+                        )
                         .padding(8.dp)
                         .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
@@ -107,19 +112,37 @@ fun AddNewCategoryUi(modifier: Modifier = Modifier,onSaveCategory: (String) -> U
 }
 
 @Composable
-fun CategoryList(addNoteViewModel: AddNoteViewModel) {
+fun CategoryList(addNoteViewModel: AddNoteViewModel,modifier: Modifier = Modifier) {
 
     val categoriesUiState by addNoteViewModel.categoriesUiState.collectAsState()
 
     LazyColumn {
         items(items = categoriesUiState.repoList) { category ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 10.dp, horizontal = 20.dp)
-            ) {
-                Text(text = category.name)
-            }
+            CategoryRow(onSaveCategory = {
+                // TODO DELETE CATEGORY
+            },
+                noteCategory = category,
+                modifier = modifier)
         }
+    }
+}
+
+@Composable
+fun CategoryRow(modifier: Modifier = Modifier,
+                onSaveCategory : (NoteCategory) -> Unit,
+                noteCategory: NoteCategory){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 10.dp, horizontal = 20.dp)
+    ) {
+        Text(text = noteCategory.name)
+        Spacer(Modifier.weight(1f))
+        Icon(imageVector = Icons.Filled.Delete,
+            contentDescription = null,
+            modifier.clickable {
+                onSaveCategory(noteCategory)
+            }
+        )
     }
 }
