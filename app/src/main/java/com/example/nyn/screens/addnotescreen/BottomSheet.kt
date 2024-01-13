@@ -3,6 +3,7 @@ package com.example.nyn.screens.addnotescreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,8 +18,11 @@ import androidx.compose.material.icons.filled.CreateNewFolder
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DriveFolderUpload
 import androidx.compose.material.icons.filled.MailOutline
+import androidx.compose.material.icons.outlined.AddCircleOutline
+import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.CreateNewFolder
 import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -42,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import com.example.nyn.data.models.category.NoteCategory
 import com.example.nyn.ui.theme.CustomLightGray
 import com.example.nyn.ui.theme.Sen
+import com.example.nyn.ui.theme.VeryLightGray
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,7 +101,7 @@ fun AddNewCategoryUi(modifier: Modifier = Modifier,onSaveCategory: (String) -> U
                         .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(Icons.Outlined.CreateNewFolder,
+                        Icon(Icons.Outlined.AddCircleOutline,
                             contentDescription = null,
                             Modifier.clickable {
                                 onSaveCategory(value)
@@ -115,12 +120,14 @@ fun AddNewCategoryUi(modifier: Modifier = Modifier,onSaveCategory: (String) -> U
 fun CategoryList(addNoteViewModel: AddNoteViewModel,modifier: Modifier = Modifier) {
 
     val categoriesUiState by addNoteViewModel.categoriesUiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
     LazyColumn {
         items(items = categoriesUiState.repoList) { category ->
             CategoryRow(onSaveCategory = {
-                // TODO DELETE CATEGORY
-            },
+                coroutineScope.launch {
+                    addNoteViewModel.deleteCategoryFromDB(it)
+                } },
                 noteCategory = category,
                 modifier = modifier)
         }
@@ -131,18 +138,31 @@ fun CategoryList(addNoteViewModel: AddNoteViewModel,modifier: Modifier = Modifie
 fun CategoryRow(modifier: Modifier = Modifier,
                 onSaveCategory : (NoteCategory) -> Unit,
                 noteCategory: NoteCategory){
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 10.dp, horizontal = 20.dp)
-    ) {
-        Text(text = noteCategory.name)
-        Spacer(Modifier.weight(1f))
-        Icon(imageVector = Icons.Filled.Delete,
-            contentDescription = null,
-            modifier.clickable {
-                onSaveCategory(noteCategory)
-            }
-        )
+
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp, horizontal = 20.dp)
+        ) {
+            Icon(imageVector = Icons.Outlined.CheckCircle,
+                contentDescription = null,
+                tint = Color.LightGray,
+                modifier = modifier.padding(end = 8.dp)
+                    .clickable {
+                    // TODO Checked Category
+                }
+            )
+            Text(text = noteCategory.name, fontFamily = Sen, fontWeight = FontWeight.SemiBold,)
+            Spacer(Modifier.weight(1f))
+            Icon(imageVector = Icons.Filled.Delete,
+                contentDescription = null,
+                modifier.clickable {
+                    onSaveCategory(noteCategory)
+                }
+            )
+        }
+
+        Divider( thickness = 1.dp, color = Color.LightGray, modifier = Modifier.padding(start = 16.dp, end = 16.dp))
     }
 }
