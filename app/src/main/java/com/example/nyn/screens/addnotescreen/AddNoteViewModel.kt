@@ -1,5 +1,6 @@
 package com.example.nyn.screens.addnotescreen
 
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,12 +31,15 @@ class AddNoteViewModel @Inject constructor(
 
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L
+        private const val DEFAULT_CATEGORY_INDEX = -1
     }
 
 
     // MutableState to handle our UI state
     var noteTitle = mutableStateOf("")
     var noteBody = mutableStateOf("")
+    var selectedCategory = mutableStateOf("")
+
 
     suspend fun saveCategoryToDB(categoryName : String){
         val newCategory = NoteCategory(id = 0 , name = categoryName)
@@ -43,7 +47,7 @@ class AddNoteViewModel @Inject constructor(
     }
 
 
-    suspend fun saveNoteToDB(){
+    suspend fun saveNoteToDB(noteCategory: String = ""){
 
         // Todo : Validate note before saving
 
@@ -51,9 +55,17 @@ class AddNoteViewModel @Inject constructor(
             title = noteTitle.value,
             body = noteBody.value,
             isPinned = false,
-            category = "",
+            category = getSelectedCategoryName(),
             color = "")
         noteRepo.insertNote(note)
+    }
+
+    private fun getSelectedCategoryName(): String {
+            return selectedCategory.value
+    }
+
+    fun setSelectedCategoryName(categoryName: String) {
+        selectedCategory.value = categoryName
     }
 
     suspend fun deleteCategoryFromDB(noteCategory: NoteCategory){
@@ -67,7 +79,6 @@ class AddNoteViewModel @Inject constructor(
     fun updateNoteBody(body : String){
         noteBody.value = body
     }
-
 }
 
 data class CategoriesUiState(val repoList: List<NoteCategory> = listOf())

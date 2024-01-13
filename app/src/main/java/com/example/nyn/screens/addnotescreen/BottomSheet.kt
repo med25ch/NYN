@@ -11,16 +11,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CreateNewFolder
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.DriveFolderUpload
-import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.outlined.AddCircleOutline
 import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.CreateNewFolder
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,7 +30,9 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -41,12 +41,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.nyn.data.models.category.NoteCategory
-import com.example.nyn.ui.theme.CustomLightGray
 import com.example.nyn.ui.theme.Sen
-import com.example.nyn.ui.theme.VeryLightGray
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -119,16 +116,21 @@ fun AddNewCategoryUi(modifier: Modifier = Modifier,onSaveCategory: (String) -> U
 @Composable
 fun CategoryList(addNoteViewModel: AddNoteViewModel,modifier: Modifier = Modifier) {
 
+    val listState = rememberLazyListState()
+    var selectedIndex by remember { mutableIntStateOf(-1) }
     val categoriesUiState by addNoteViewModel.categoriesUiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
 
-    LazyColumn {
+    LazyColumn(state = listState) {
         items(items = categoriesUiState.repoList) { category ->
-            CategoryRow(onSaveCategory = {
-                coroutineScope.launch {
-                    addNoteViewModel.deleteCategoryFromDB(it)
-                } },
+            CategoryRow(
+                onDeleteCategory = { coroutineScope.launch { addNoteViewModel.deleteCategoryFromDB(it)} },
                 noteCategory = category,
+                onCategoryClicked = {
+                    selectedIndex = if (selectedIndex != category.id) category.id else -1
+                    addNoteViewModel.setSelectedCategoryName(category.name)
+                },
+                selected = selectedIndex == category.id,
                 modifier = modifier)
         }
     }
@@ -136,7 +138,9 @@ fun CategoryList(addNoteViewModel: AddNoteViewModel,modifier: Modifier = Modifie
 
 @Composable
 fun CategoryRow(modifier: Modifier = Modifier,
-                onSaveCategory : (NoteCategory) -> Unit,
+                onDeleteCategory : (NoteCategory) -> Unit,
+                onCategoryClicked :(NoteCategory) -> Unit,
+                selected: Boolean,
                 noteCategory: NoteCategory){
 
     Column {
@@ -144,21 +148,22 @@ fun CategoryRow(modifier: Modifier = Modifier,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 10.dp, horizontal = 20.dp)
-        ) {
-            Icon(imageVector = Icons.Outlined.CheckCircle,
-                contentDescription = null,
-                tint = Color.LightGray,
-                modifier = modifier.padding(end = 8.dp)
-                    .clickable {
-                    // TODO Checked Category
+                .clickable {
+                    // TODO PUT CHECKED CATEGORY ON VIEWMODEL
+                    onCategoryClicked(noteCategory)
                 }
+        ) {
+            Icon(imageVector = if (selected) Icons.Filled.CheckCircle else Icons.Outlined.CheckCircle,
+                contentDescription = null,
+                tint = if (selected) Color.Black else Color.LightGray,
+                modifier = modifier.padding(end = 16.dp)
             )
             Text(text = noteCategory.name, fontFamily = Sen, fontWeight = FontWeight.SemiBold,)
             Spacer(Modifier.weight(1f))
             Icon(imageVector = Icons.Filled.Delete,
                 contentDescription = null,
                 modifier.clickable {
-                    onSaveCategory(noteCategory)
+                    onDeleteCategory(noteCategory)
                 }
             )
         }

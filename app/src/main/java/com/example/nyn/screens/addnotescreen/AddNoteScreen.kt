@@ -163,8 +163,6 @@ fun TitleNoteText(modifier: Modifier, addNoteViewModel: AddNoteViewModel) {
 @Composable
 fun BodyNoteText(modifier: Modifier = Modifier, addNoteViewModel: AddNoteViewModel) {
 
-    var value by remember { mutableStateOf("") }
-
     TextField(
         value = addNoteViewModel.noteBody.value,
         onValueChange = { addNoteViewModel.updateNoteBody(it) },
