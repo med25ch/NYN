@@ -56,6 +56,10 @@ class AddNoteViewModel @Inject constructor(
         noteRepo.insertNote(note)
     }
 
+    suspend fun deleteCategoryFromDB(noteCategory: NoteCategory){
+        categoryRepo.deleteNoteCategory(noteCategory)
+    }
+
     fun updateNoteTitle(title : String){
         noteTitle.value = title
     }

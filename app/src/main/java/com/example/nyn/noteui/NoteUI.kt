@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -50,7 +51,11 @@ fun NoteCard(modifier: Modifier = Modifier,
                 Icon(imageVector = Icons.Default.PushPin,
                     contentDescription = null,
                     tint = CustomLightGray,
-                    modifier = modifier.clickable {  }
+                    modifier = modifier
+                        .rotate(45f)
+                        .clickable {
+                        // TODO Pin Note
+                    }
                 )
             }
             Spacer(modifier = Modifier.size(10.dp))
