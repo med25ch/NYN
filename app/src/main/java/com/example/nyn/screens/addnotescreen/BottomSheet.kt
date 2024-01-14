@@ -124,7 +124,9 @@ fun CategoryList(addNoteViewModel: AddNoteViewModel,modifier: Modifier = Modifie
     LazyColumn(state = listState) {
         items(items = categoriesUiState.repoList) { category ->
             CategoryRow(
-                onDeleteCategory = { coroutineScope.launch { addNoteViewModel.deleteCategoryFromDB(it)} },
+                onDeleteCategory = {
+                    coroutineScope.launch { addNoteViewModel.deleteCategoryFromDB(it,selectedIndex == category.id)}
+                                   },
                 noteCategory = category,
                 onCategoryClicked = {
                     selectedIndex = if (selectedIndex != category.id) category.id else -1

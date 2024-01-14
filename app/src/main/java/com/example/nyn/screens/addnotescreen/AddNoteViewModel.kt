@@ -1,6 +1,5 @@
 package com.example.nyn.screens.addnotescreen
 
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,7 +7,6 @@ import com.example.nyn.data.models.category.NoteCategory
 import com.example.nyn.data.models.note.Note
 import com.example.nyn.data.repositories.OfflineCategoriesRepository
 import com.example.nyn.data.repositories.OfflineNotesRepository
-import com.example.nyn.screens.homescreen.NoteUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -68,7 +66,10 @@ class AddNoteViewModel @Inject constructor(
         selectedCategory.value = categoryName
     }
 
-    suspend fun deleteCategoryFromDB(noteCategory: NoteCategory){
+    suspend fun deleteCategoryFromDB(noteCategory: NoteCategory, resetSelectedCategory: Boolean){
+        if(resetSelectedCategory){
+            selectedCategory.value = ""
+        }
         categoryRepo.deleteNoteCategory(noteCategory)
     }
 
