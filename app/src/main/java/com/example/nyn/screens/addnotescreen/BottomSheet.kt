@@ -117,11 +117,12 @@ fun AddNewCategoryUi(modifier: Modifier = Modifier,onSaveCategory: (String) -> U
 fun CategoryList(addNoteViewModel: AddNoteViewModel,modifier: Modifier = Modifier) {
 
     val listState = rememberLazyListState()
-    var selectedIndex by remember { mutableIntStateOf(-1) }
+    var selectedIndex by rememberSaveable { mutableIntStateOf(-1) }
     val categoriesUiState by addNoteViewModel.categoriesUiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
 
-    LazyColumn(state = listState) {
+    LazyColumn(state = listState,
+        modifier = modifier.padding(bottom = 45.dp)) {
         items(items = categoriesUiState.repoList) { category ->
             CategoryRow(
                 onDeleteCategory = {
