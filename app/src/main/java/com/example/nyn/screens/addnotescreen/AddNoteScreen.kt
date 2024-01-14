@@ -7,9 +7,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.CreateNewFolder
 import androidx.compose.material.icons.filled.PushPin
-import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.outlined.CreateNewFolder
+import androidx.compose.material.icons.outlined.PushPin
+import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,11 +31,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.nyn.ui.theme.Sen
 import kotlinx.coroutines.launch
@@ -50,6 +51,7 @@ fun AddNoteScreenScaffold(modifier: Modifier = Modifier,
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val coroutineScope = rememberCoroutineScope()
+    var isPinned by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -78,14 +80,21 @@ fun AddNoteScreenScaffold(modifier: Modifier = Modifier,
                 actions = {
                     IconButton(onClick = { onShowSheet() }) {
                         Icon(
-                            imageVector = Icons.Filled.CreateNewFolder,
+                            imageVector = Icons.Outlined.CreateNewFolder,
                             contentDescription = "Localized description"
                         )
                     }
 
-                    IconButton(onClick = { /* do something */ }) {
+                    IconButton(onClick = {
+                        isPinned = !isPinned
+                        addNoteViewModel.isPinnedNote(isPinned)
+                    }) {
                         Icon(
-                            imageVector = Icons.Filled.PushPin,
+                            imageVector = if (isPinned)
+                                Icons.Filled.PushPin
+                            else
+                                Icons.Outlined.PushPin
+                                ,
                             modifier = modifier.rotate(45f),
                             contentDescription = "Localized description"
                         )
@@ -98,7 +107,7 @@ fun AddNoteScreenScaffold(modifier: Modifier = Modifier,
                         navHostController.popBackStack()
                     }) {
                         Icon(
-                            imageVector = Icons.Filled.Save,
+                            imageVector = Icons.Outlined.Save,
                             contentDescription = "Localized description"
                         )
                     }
@@ -146,9 +155,11 @@ fun TitleNoteText(modifier: Modifier, addNoteViewModel: AddNoteViewModel) {
         value = addNoteViewModel.noteTitle.value ,
         onValueChange = { addNoteViewModel.updateNoteTitle(it) },
         label = { Text("Note title") },
-        maxLines = 1,
+        maxLines = 3,
+        singleLine = false,
         textStyle = TextStyle(
             fontFamily = Sen,
+            fontSize = 24.sp,
             fontWeight = FontWeight.ExtraBold,
         ),
         modifier = Modifier
@@ -171,6 +182,7 @@ fun BodyNoteText(modifier: Modifier = Modifier, addNoteViewModel: AddNoteViewMod
         maxLines = 50,
         textStyle = TextStyle(
             fontFamily = Sen,
+            fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
         ),
         modifier = Modifier

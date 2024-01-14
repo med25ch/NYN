@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PushPin
+import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -48,9 +49,17 @@ fun NoteCard(modifier: Modifier = Modifier,
                     color = Color.Black
                 )
 
-                Icon(imageVector = Icons.Default.PushPin,
+                Icon(imageVector = if (note.isPinned)
+                    Icons.Filled.PushPin
+                else
+                    Icons.Outlined.PushPin
+                    ,
                     contentDescription = null,
-                    tint = CustomLightGray,
+                    tint = if (note.isPinned)
+                        Color.Red
+                    else
+                        CustomLightGray
+                        ,
                     modifier = modifier
                         .rotate(45f)
                         .clickable {

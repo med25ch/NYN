@@ -37,6 +37,7 @@ class AddNoteViewModel @Inject constructor(
     var noteTitle = mutableStateOf("")
     var noteBody = mutableStateOf("")
     var selectedCategory = mutableStateOf("")
+    private var isPinned : Boolean = false
 
 
     suspend fun saveCategoryToDB(categoryName : String){
@@ -52,7 +53,7 @@ class AddNoteViewModel @Inject constructor(
         val note = Note(id = 0,
             title = noteTitle.value,
             body = noteBody.value,
-            isPinned = false,
+            isPinned = isPinned,
             category = getSelectedCategoryName(),
             color = "")
         noteRepo.insertNote(note)
@@ -79,6 +80,11 @@ class AddNoteViewModel @Inject constructor(
 
     fun updateNoteBody(body : String){
         noteBody.value = body
+    }
+
+    fun isPinnedNote(isPinned : Boolean = false) : Boolean{
+        this.isPinned = isPinned
+        return this.isPinned
     }
 }
 
