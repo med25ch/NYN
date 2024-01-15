@@ -6,8 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.nyn.screens.homescreen.HomeScreenViewModel
 import com.example.nyn.screens.addnotescreen.AddNoteScreen
 import com.example.nyn.screens.addnotescreen.AddNoteViewModel
@@ -43,11 +45,15 @@ fun AppNavHost(
                     AnimatedContentTransitionScope.SlideDirection.Right,
                     animationSpec = tween(700)
                 )
-            }
+            },
+            arguments = listOf(navArgument("noteId") { type = NavType.StringType })
 
-            ) {
+            ) {backStackEntry ->
+
             val viewModel = hiltViewModel<AddNoteViewModel>()
-            AddNoteScreen(navHostController = navController, addNoteViewModel = viewModel)
+            AddNoteScreen(navHostController = navController,
+                addNoteViewModel = viewModel,
+                argument = backStackEntry.arguments?.getString("noteId"))
         }
     }
 }

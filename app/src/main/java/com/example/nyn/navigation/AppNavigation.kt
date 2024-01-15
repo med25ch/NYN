@@ -6,5 +6,5 @@ enum class Screen {
 }
 sealed class NavigationItem(val route: String) {
     object HomeScreen : NavigationItem(Screen.HOME.name)
-    object AddNoteScreen : NavigationItem(Screen.ADD_NOTE.name)
+    object AddNoteScreen : NavigationItem(Screen.ADD_NOTE.name + "/{noteId}")
 }

@@ -28,13 +28,16 @@ import com.example.nyn.ui.theme.Sen
 
 @Composable
 fun NoteCard(modifier: Modifier = Modifier,
-             note : Note){
+             note : Note,
+             onCardClick : (Note) -> Unit){
 
      Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
-            .clickable { },
+            .clickable {
+                       onCardClick(note)
+            },
     ) {
         Column(
             modifier = Modifier.padding(10.dp)

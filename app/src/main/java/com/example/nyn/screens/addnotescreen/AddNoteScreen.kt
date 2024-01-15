@@ -23,6 +23,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,12 +32,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.nyn.data.models.note.Note
 import com.example.nyn.ui.theme.Sen
 import kotlinx.coroutines.launch
 
@@ -120,6 +123,7 @@ fun AddNoteScreenScaffold(modifier: Modifier = Modifier,
             modifier = modifier
                 .padding(innerPadding),
         ) {
+
             // Note title Text
             TitleNoteText(modifier,addNoteViewModel)
 
@@ -132,7 +136,15 @@ fun AddNoteScreenScaffold(modifier: Modifier = Modifier,
 @Composable
 fun AddNoteScreen(modifier: Modifier = Modifier,
                   navHostController: NavHostController,
-                  addNoteViewModel: AddNoteViewModel){
+                  addNoteViewModel: AddNoteViewModel,
+                  argument : String?){
+
+    val noteId = argument?.toIntOrNull()
+
+    if (noteId != null) {
+        addNoteViewModel.updateNoteMode(true)
+        addNoteViewModel.setNoteIdToUpdate(noteId)
+    }
 
     var showSheet by rememberSaveable { mutableStateOf(false) }
 
@@ -149,7 +161,6 @@ fun AddNoteScreen(modifier: Modifier = Modifier,
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TitleNoteText(modifier: Modifier, addNoteViewModel: AddNoteViewModel) {
-    var value by remember { mutableStateOf("") }
 
     TextField(
         value = addNoteViewModel.noteTitle.value ,
@@ -165,9 +176,12 @@ fun TitleNoteText(modifier: Modifier, addNoteViewModel: AddNoteViewModel) {
         modifier = Modifier
             .fillMaxWidth(),
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.surface,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-            disabledContainerColor = MaterialTheme.colorScheme.surface,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
         )
     )
 }
@@ -190,9 +204,12 @@ fun BodyNoteText(modifier: Modifier = Modifier, addNoteViewModel: AddNoteViewMod
         singleLine = false,
         minLines = 15,
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.surface,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-            disabledContainerColor = MaterialTheme.colorScheme.surface,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
         )
     )
 }

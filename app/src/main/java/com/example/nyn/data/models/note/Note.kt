@@ -9,9 +9,9 @@ import com.example.nyn.data.models.category.NoteCategory
 data class Note(
     @PrimaryKey(autoGenerate = true)
     val id:Int = 0,
-    val title : String,
-    val body : String,
-    val isPinned : Boolean,
-    val category: String,
-    val color : String,
+    var title : String,
+    var body : String,
+    var isPinned : Boolean,
+    var category: String,
+    var color : String,
     /*val user : User?*/)
