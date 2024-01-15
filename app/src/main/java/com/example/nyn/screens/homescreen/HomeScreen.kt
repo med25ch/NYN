@@ -55,7 +55,6 @@ fun ScaffoldNYN(modifier: Modifier = Modifier,
                 navHostController: NavHostController,
                 homeScreenViewModel: HomeScreenViewModel
 ) {
-    var presses by remember { mutableIntStateOf(0) }
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
     Scaffold(
@@ -63,7 +62,7 @@ fun ScaffoldNYN(modifier: Modifier = Modifier,
                  SmallTopAppBar(modifier,scrollBehavior)
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { navHostController.navigate(Screen.ADD_NOTE.name) },
+            FloatingActionButton(onClick = { navHostController.navigate(Screen.ADD_NOTE.name + "/" + "NO_ARGUMENT") },
                 containerColor = Color.DarkGray,
                 contentColor = Color.White,
             ) {
@@ -82,7 +81,7 @@ fun ScaffoldNYN(modifier: Modifier = Modifier,
             SearchBar(modifier)
 
             // Staggered Grid of notes
-            NotesLazyStaggeredGrid(modifier,homeScreenViewModel)
+            NotesLazyStaggeredGrid(modifier,homeScreenViewModel,navHostController)
         }
     }
 }
@@ -183,7 +182,9 @@ fun SearchBar(modifier: Modifier = Modifier){
 }
 
 @Composable
-fun NotesLazyStaggeredGrid(modifier: Modifier = Modifier, homeScreenViewModel: HomeScreenViewModel){
+fun NotesLazyStaggeredGrid(modifier: Modifier = Modifier,
+                           homeScreenViewModel: HomeScreenViewModel,
+                           navHostController: NavHostController,){
 
     val homeUiState by homeScreenViewModel.homeUiState.collectAsState()
 
@@ -193,7 +194,7 @@ fun NotesLazyStaggeredGrid(modifier: Modifier = Modifier, homeScreenViewModel: H
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         content = {
             items(items = homeUiState.notesList) {note ->
-                NoteCard(note = note)
+                NoteCard(note = note, onCardClick = { navHostController.navigate(Screen.ADD_NOTE.name + "/${note.id}") })
             }
         }
     )
