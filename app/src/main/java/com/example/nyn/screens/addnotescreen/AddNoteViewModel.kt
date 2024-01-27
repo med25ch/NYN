@@ -14,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -40,11 +41,11 @@ class AddNoteViewModel @Inject constructor(
     private var noteIdToUpdate : Int = -10
 
 
-    val updatedNoteUiState: StateFlow<Any> =
-        noteRepo.getNoteStream(noteIdToUpdate).map {
-            if (it != null) {
+    val updatedNoteUiState: StateFlow<UpdatedNoteUiState> =
+        noteRepo.getNoteStream(noteIdToUpdate)
+            .filterNotNull()
+            .map {
                 UpdatedNoteUiState(it)
-            }
         }
             .stateIn(
                 scope = viewModelScope,
@@ -65,7 +66,7 @@ class AddNoteViewModel @Inject constructor(
         categoryRepo.insertNoteCategory(newCategory)
     }
 
-    suspend fun saveNoteToDB(noteCategory: String = ""){
+    suspend fun saveNoteToDB(){
 
         // Todo : Validate note before saving
         if (isAnUpdate){
