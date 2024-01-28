@@ -103,15 +103,15 @@ fun SharedScaffold(
     navHostController: NavHostController,
     onShowSheet: () -> Unit,
     modifier: Modifier,
-    onClickPinnedNote: (Boolean) -> Unit,
+    onClickPinnedNote: () -> Unit,
     onClickSaveNote: () -> Unit,
     onTitleTextValueChange : (String) -> Unit,
     titleTextProvider : () -> String,
     onBodyTextValueChange : (String) -> Unit,
-    bodyTextProvider : () -> String
+    bodyTextProvider : () -> String,
+    pinStateProvider : () -> Boolean
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    var isPinned by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -145,11 +145,10 @@ fun SharedScaffold(
                     }
 
                     IconButton(onClick = {
-                        isPinned = !isPinned
-                        onClickPinnedNote(isPinned)
+                        onClickPinnedNote()
                     }) {
                         Icon(
-                            imageVector = if (isPinned)
+                            imageVector = if (pinStateProvider())
                                 Icons.Filled.PushPin
                             else
                                 Icons.Outlined.PushPin,

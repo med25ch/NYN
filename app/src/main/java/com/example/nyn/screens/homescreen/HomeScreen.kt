@@ -62,7 +62,7 @@ fun ScaffoldNYN(modifier: Modifier = Modifier,
                  SmallTopAppBar(modifier,scrollBehavior)
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { navHostController.navigate(Screen.ADD_NOTE.name + "/" + "NO_ARGUMENT") },
+            FloatingActionButton(onClick = { navHostController.navigate(Screen.ADD_NOTE.name) },
                 containerColor = Color.DarkGray,
                 contentColor = Color.White,
             ) {
@@ -194,7 +194,7 @@ fun NotesLazyStaggeredGrid(modifier: Modifier = Modifier,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         content = {
             items(items = homeUiState.notesList) {note ->
-                NoteCard(note = note, onCardClick = { navHostController.navigate(Screen.ADD_NOTE.name + "/${note.id}") })
+                NoteCard(note = note, onCardClick = { navHostController.navigate(Screen.UPDATE_NOTE.name + "/${note.id}") })
             }
         }
     )

@@ -50,7 +50,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun BottomSheet(onDismiss: () -> Unit,
                 addNoteViewModel: AddNoteViewModel,
-                modifier: Modifier = Modifier) {
+                modifier: Modifier = Modifier,
+                onSetCategory: (String) -> Unit) {
 
     val modalBottomSheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
@@ -67,7 +68,10 @@ fun BottomSheet(onDismiss: () -> Unit,
             }
         }
 
-        CategoryList(addNoteViewModel,modifier)
+        CategoryList(
+            addNoteViewModel = addNoteViewModel,
+            modifier = modifier,
+            onSetCategory = { onSetCategory(it) })
     }
 }
 
@@ -114,7 +118,9 @@ fun AddNewCategoryUi(modifier: Modifier = Modifier,onSaveCategory: (String) -> U
 }
 
 @Composable
-fun CategoryList(addNoteViewModel: AddNoteViewModel,modifier: Modifier = Modifier) {
+fun CategoryList(addNoteViewModel: AddNoteViewModel,
+                 modifier: Modifier = Modifier,
+                 onSetCategory : (String) -> Unit) {
 
     val listState = rememberLazyListState()
     var selectedIndex by rememberSaveable { mutableIntStateOf(-1) }
@@ -131,7 +137,7 @@ fun CategoryList(addNoteViewModel: AddNoteViewModel,modifier: Modifier = Modifie
                 noteCategory = category,
                 onCategoryClicked = {
                     selectedIndex = if (selectedIndex != category.id) category.id else -1
-                    addNoteViewModel.setSelectedCategoryName(category.name)
+                    onSetCategory(category.name)
                 },
                 selected = selectedIndex == category.id,
                 modifier = modifier)

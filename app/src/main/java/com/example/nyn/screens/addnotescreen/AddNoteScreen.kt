@@ -26,7 +26,7 @@ fun AddNoteScreenScaffold(modifier: Modifier = Modifier,
         navHostController = navHostController,
         onShowSheet = onShowSheet,
         modifier = modifier,
-        onClickPinnedNote =  { addNoteViewModel.isPinnedNote(it) },
+        onClickPinnedNote =  { addNoteViewModel.updatePinState() },
         onClickSaveNote = {
             coroutineScope.launch {
                 addNoteViewModel.saveNoteToDB()
@@ -35,7 +35,8 @@ fun AddNoteScreenScaffold(modifier: Modifier = Modifier,
         onTitleTextValueChange = { addNoteViewModel.updateNoteTitle(it) } ,
         titleTextProvider = { addNoteViewModel.noteTitle.value },
         onBodyTextValueChange = { addNoteViewModel.updateNoteBody(it)},
-        bodyTextProvider = { addNoteViewModel.noteBody.value }
+        bodyTextProvider = { addNoteViewModel.noteBody.value },
+        pinStateProvider = { addNoteViewModel.isPinned.value }
     )
 }
 
@@ -43,23 +44,16 @@ fun AddNoteScreenScaffold(modifier: Modifier = Modifier,
 @Composable
 fun AddNoteScreen(modifier: Modifier = Modifier,
                   navHostController: NavHostController,
-                  addNoteViewModel: AddNoteViewModel,
-                  argument : String?){
+                  addNoteViewModel: AddNoteViewModel){
 
-
-    val noteId = argument?.toIntOrNull()
-
-    if (noteId != null) {
-        addNoteViewModel.updateNoteMode(true)
-        addNoteViewModel.setNoteIdToUpdate(noteId)
-    }
 
     var showSheet by rememberSaveable { mutableStateOf(false) }
 
     if (showSheet) {
         BottomSheet(modifier = modifier,
             onDismiss = {showSheet = false},
-            addNoteViewModel = addNoteViewModel)
+            addNoteViewModel = addNoteViewModel,
+            onSetCategory = { addNoteViewModel.setSelectedCategoryName(it)})
     }
     AddNoteScreenScaffold( modifier = modifier,
         addNoteViewModel = addNoteViewModel,
