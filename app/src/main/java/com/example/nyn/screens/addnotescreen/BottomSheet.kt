@@ -32,7 +32,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -51,10 +50,11 @@ import kotlinx.coroutines.launch
 fun BottomSheet(onDismiss: () -> Unit,
                 addNoteViewModel: AddNoteViewModel,
                 modifier: Modifier = Modifier,
-                onSetCategory: (String) -> Unit) {
+                onSaveCategory: (String) -> Unit,
+                onSetCategory: (String) -> Unit,
+                onDeleteCategory: (NoteCategory) -> Unit) {
 
     val modalBottomSheetState = rememberModalBottomSheetState()
-    val coroutineScope = rememberCoroutineScope()
 
     ModalBottomSheet(
         onDismissRequest = { onDismiss() },
@@ -63,15 +63,15 @@ fun BottomSheet(onDismiss: () -> Unit,
     ) {
 
         AddNewCategoryUi(modifier) {
-            coroutineScope.launch {
-                addNoteViewModel.saveCategoryToDB(it)
-            }
+            onSaveCategory(it)
         }
 
         CategoryList(
             addNoteViewModel = addNoteViewModel,
             modifier = modifier,
-            onSetCategory = { onSetCategory(it) })
+            onSetCategory = { onSetCategory(it) },
+            onSelectedCategory = { onDeleteCategory(it) }
+        )
     }
 }
 
@@ -113,27 +113,23 @@ fun AddNewCategoryUi(modifier: Modifier = Modifier,onSaveCategory: (String) -> U
                 }
             )
         }
-
-
 }
 
 @Composable
 fun CategoryList(addNoteViewModel: AddNoteViewModel,
                  modifier: Modifier = Modifier,
-                 onSetCategory : (String) -> Unit) {
+                 onSetCategory : (String) -> Unit,
+                 onSelectedCategory: (NoteCategory) -> Unit) {
 
     val listState = rememberLazyListState()
     var selectedIndex by rememberSaveable { mutableIntStateOf(-1) }
     val categoriesUiState by addNoteViewModel.categoriesUiState.collectAsState()
-    val coroutineScope = rememberCoroutineScope()
 
     LazyColumn(state = listState,
         modifier = modifier.padding(bottom = 45.dp)) {
         items(items = categoriesUiState.repoList) { category ->
             CategoryRow(
-                onDeleteCategory = {
-                    coroutineScope.launch { addNoteViewModel.deleteCategoryFromDB(it,selectedIndex == category.id)}
-                                   },
+                onDeleteCategory = { onSelectedCategory(category) },
                 noteCategory = category,
                 onCategoryClicked = {
                     selectedIndex = if (selectedIndex != category.id) category.id else -1

@@ -48,12 +48,19 @@ fun AddNoteScreen(modifier: Modifier = Modifier,
 
 
     var showSheet by rememberSaveable { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
     if (showSheet) {
         BottomSheet(modifier = modifier,
             onDismiss = {showSheet = false},
             addNoteViewModel = addNoteViewModel,
-            onSetCategory = { addNoteViewModel.setSelectedCategoryName(it)})
+            onSaveCategory = {
+                coroutineScope.launch { addNoteViewModel.saveCategoryToDB(it) }
+            },
+            onSetCategory = { addNoteViewModel.setSelectedCategoryName(it)},
+            onDeleteCategory = {
+                coroutineScope.launch { addNoteViewModel.deleteCategoryFromDB(it,true) }
+            })
     }
     AddNoteScreenScaffold( modifier = modifier,
         addNoteViewModel = addNoteViewModel,
