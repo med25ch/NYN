@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.PushPin
+import androidx.compose.material.icons.outlined.ColorLens
+import androidx.compose.material.icons.outlined.Colorize
 import androidx.compose.material.icons.outlined.CreateNewFolder
+import androidx.compose.material.icons.outlined.FormatColorFill
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -140,6 +143,13 @@ fun SharedScaffold(
                     IconButton(onClick = { onShowSheet() }) {
                         Icon(
                             imageVector = Icons.Outlined.CreateNewFolder,
+                            contentDescription = "Localized description"
+                        )
+                    }
+
+                    IconButton(onClick = { }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Colorize,
                             contentDescription = "Localized description"
                         )
                     }
