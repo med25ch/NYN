@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material.icons.outlined.ColorLens
@@ -14,6 +15,9 @@ import androidx.compose.material.icons.outlined.CreateNewFolder
 import androidx.compose.material.icons.outlined.FormatColorFill
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Save
+import androidx.compose.material.icons.rounded.Circle
+import androidx.compose.material.icons.rounded.FlagCircle
+import androidx.compose.material.icons.twotone.Circle
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -114,7 +118,8 @@ fun SharedScaffold(
     titleTextProvider : () -> String,
     onBodyTextValueChange : (String) -> Unit,
     bodyTextProvider : () -> String,
-    pinStateProvider : () -> Boolean
+    pinStateProvider : () -> Boolean,
+    noteColorProvider : () -> Long
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
@@ -151,8 +156,9 @@ fun SharedScaffold(
 
                     IconButton(onClick = { onShowColorDialog() }) {
                         Icon(
-                            imageVector = Icons.Outlined.Circle,
-                            contentDescription = "Localized description"
+                            imageVector = Icons.TwoTone.Circle,
+                            contentDescription = "Localized description",
+                            tint = if (noteColorProvider() != 0L) Color(noteColorProvider()) else Color(0xffc2dcfd)
                         )
                     }
 

@@ -27,9 +27,14 @@ fun UpdateNoteScreenScaffold(modifier: Modifier = Modifier,
 
     val coroutineScope = rememberCoroutineScope()
 
-    updateScreenViewModel.noteTitle.value = itemUiState.note.title
-    updateScreenViewModel.noteBody.value = itemUiState.note.body
-    updateScreenViewModel.isPinned.value = itemUiState.note.isPinned
+
+    if(!updateScreenViewModel.initExecuted.value)
+    {
+        updateScreenViewModel.noteTitle.value = itemUiState.note.title
+        updateScreenViewModel.noteBody.value = itemUiState.note.body
+        updateScreenViewModel.isPinned.value = itemUiState.note.isPinned
+        updateScreenViewModel.setSelectedColor(itemUiState.note.color)
+    }
 
 
     SharedScaffold(
@@ -47,7 +52,8 @@ fun UpdateNoteScreenScaffold(modifier: Modifier = Modifier,
         titleTextProvider = { updateScreenViewModel.getNoteTitle() },
         onBodyTextValueChange = { updateScreenViewModel.updateNoteBody(it) },
         bodyTextProvider = { updateScreenViewModel.getNoteBody() },
-        pinStateProvider = { updateScreenViewModel.getPinState() }
+        pinStateProvider = { updateScreenViewModel.getPinState() },
+        noteColorProvider = { updateScreenViewModel.getSelectedColor() }
     )
 }
 

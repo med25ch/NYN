@@ -92,6 +92,10 @@ class AddNoteViewModel @Inject constructor(
         selectedColor.longValue = it
     }
 
+    fun getSelectedColor() : Long {
+        return selectedColor.longValue
+    }
+
 }
 
 data class CategoriesUiState(val repoList: List<NoteCategory> = listOf())
