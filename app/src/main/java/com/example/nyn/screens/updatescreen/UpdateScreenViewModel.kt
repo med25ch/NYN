@@ -50,7 +50,7 @@ class UpdateScreenViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            delay(7000)
+            delay(2500)
             initExecuted.value = true
         }
     }
