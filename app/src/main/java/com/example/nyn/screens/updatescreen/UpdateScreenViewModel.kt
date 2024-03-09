@@ -9,11 +9,13 @@ import com.example.nyn.data.models.note.Note
 import com.example.nyn.data.repositories.OfflineCategoriesRepository
 import com.example.nyn.data.repositories.OfflineNotesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,6 +31,7 @@ class UpdateScreenViewModel @Inject constructor(
     var selectedCategory = mutableStateOf("")
     private var selectedColor = mutableLongStateOf(0L)
     var isPinned = mutableStateOf(false)
+    var initExecuted = mutableStateOf(false)
 
     private val noteIdToUpdate: String = checkNotNull(savedStateHandle["noteId"])
 
@@ -45,6 +48,12 @@ class UpdateScreenViewModel @Inject constructor(
                 initialValue = UpdatedNoteUiState()
             )
 
+    init {
+        viewModelScope.launch {
+            delay(7000)
+            initExecuted.value = true
+        }
+    }
 
     fun getNoteTitle(): String {
         return noteTitle.value
@@ -85,6 +94,9 @@ class UpdateScreenViewModel @Inject constructor(
         selectedColor.longValue = it
     }
 
+    fun getSelectedColor() : Long{
+        return selectedColor.longValue
+    }
 }
 
 
