@@ -1,5 +1,7 @@
 package com.example.nyn.noteui
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +13,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -36,8 +40,12 @@ fun NoteCard(modifier: Modifier = Modifier,
             .fillMaxWidth()
             .padding(5.dp)
             .clickable {
-                       onCardClick(note)
+                onCardClick(note)
             },
+         border = BorderStroke(1.dp, Color.LightGray),
+         colors = CardDefaults.cardColors(
+             containerColor = if(note.color != 0L) Color(note.color) else MaterialTheme.colorScheme.surfaceVariant
+         )
     ) {
         Column(
             modifier = Modifier.padding(10.dp)
@@ -66,8 +74,8 @@ fun NoteCard(modifier: Modifier = Modifier,
                     modifier = modifier
                         .rotate(45f)
                         .clickable {
-                        // TODO Pin Note
-                    }
+                            // TODO Pin Note
+                        }
                 )
             }
             Spacer(modifier = Modifier.size(10.dp))

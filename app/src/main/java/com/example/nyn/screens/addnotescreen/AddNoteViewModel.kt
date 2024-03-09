@@ -1,5 +1,6 @@
 package com.example.nyn.screens.addnotescreen
 
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,7 +28,8 @@ class AddNoteViewModel @Inject constructor(
     // MutableState to handle our UI state
     var noteTitle = mutableStateOf("")
     var noteBody = mutableStateOf("")
-    var selectedCategory = mutableStateOf("")
+    private var selectedCategory = mutableStateOf("")
+    private var selectedColor = mutableLongStateOf(0L)
     var isPinned = mutableStateOf(false)
 
 
@@ -53,7 +55,7 @@ class AddNoteViewModel @Inject constructor(
                 body = noteBody.value,
                 isPinned = isPinned.value,
                 category = getSelectedCategoryName(),
-                color = "")
+                color = selectedColor.longValue)
             noteRepo.insertNote(note)
     }
 
@@ -86,6 +88,9 @@ class AddNoteViewModel @Inject constructor(
         return isPinned.value
     }
 
+    fun setSelectedColor(it: Long) {
+        selectedColor.longValue = it
+    }
 
 }
 
