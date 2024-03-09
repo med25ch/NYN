@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.PushPin
+import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material.icons.outlined.Colorize
 import androidx.compose.material.icons.outlined.CreateNewFolder
@@ -105,6 +106,7 @@ fun BodyNoteText(modifier: Modifier = Modifier,
 fun SharedScaffold(
     navHostController: NavHostController,
     onShowSheet: () -> Unit,
+    onShowColorDialog: () -> Unit,
     modifier: Modifier,
     onClickPinnedNote: () -> Unit,
     onClickSaveNote: () -> Unit,
@@ -147,9 +149,9 @@ fun SharedScaffold(
                         )
                     }
 
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = { onShowColorDialog() }) {
                         Icon(
-                            imageVector = Icons.Outlined.Colorize,
+                            imageVector = Icons.Outlined.Circle,
                             contentDescription = "Localized description"
                         )
                     }

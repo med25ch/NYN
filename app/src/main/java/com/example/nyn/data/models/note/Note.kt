@@ -13,5 +13,5 @@ data class Note(
     var body : String,
     var isPinned : Boolean,
     var category: String,
-    var color : String,
+    var color : Long,
     /*val user : User?*/)

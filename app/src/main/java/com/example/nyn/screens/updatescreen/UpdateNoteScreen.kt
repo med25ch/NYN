@@ -5,11 +5,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import com.example.nyn.screens.dialogscreen.ColorPickerDialog
 import com.example.nyn.sharedui.SharedScaffold
 import kotlinx.coroutines.launch
 
@@ -19,6 +21,7 @@ fun UpdateNoteScreenScaffold(modifier: Modifier = Modifier,
                              updateScreenViewModel: UpdateScreenViewModel,
                              navHostController: NavHostController,
                              onShowSheet: () -> Unit,
+                             onShowColorDialog : () -> Unit,
                              itemUiState : UpdatedNoteUiState){
 
 
@@ -32,6 +35,7 @@ fun UpdateNoteScreenScaffold(modifier: Modifier = Modifier,
     SharedScaffold(
         navHostController = navHostController,
         onShowSheet = onShowSheet,
+        onShowColorDialog = onShowColorDialog,
         modifier = modifier,
         onClickPinnedNote =  { updateScreenViewModel.updatePinState()},
         onClickSaveNote = {
@@ -51,11 +55,11 @@ fun UpdateNoteScreenScaffold(modifier: Modifier = Modifier,
 @Composable
 fun UpdateNoteScreen(modifier: Modifier = Modifier,
                   navHostController: NavHostController,
-                  updateScreenViewModel: UpdateScreenViewModel, ){
+                  updateScreenViewModel: UpdateScreenViewModel,){
 
 
     var showSheet by rememberSaveable { mutableStateOf(false) }
-
+    var openColorPickerAlert by remember { mutableStateOf(false) }
     val uiState = updateScreenViewModel.updatedNoteUiState.collectAsState()
 
 //    if (showSheet) {
@@ -64,10 +68,15 @@ fun UpdateNoteScreen(modifier: Modifier = Modifier,
 //            addNoteViewModel = addNoteViewModel)
 //    }
 
+    if (openColorPickerAlert){
+        ColorPickerDialog(onDismissRequest = { openColorPickerAlert = false }, onSetNoteColor = {updateScreenViewModel.setSelectedColor(it)})
+    }
+
     UpdateNoteScreenScaffold( modifier = modifier,
         updateScreenViewModel = updateScreenViewModel,
         navHostController = navHostController,
         onShowSheet = { showSheet = true },
-        itemUiState = uiState.value
+        itemUiState = uiState.value,
+        onShowColorDialog = { openColorPickerAlert = true }
     )
 }

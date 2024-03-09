@@ -1,5 +1,6 @@
 package com.example.nyn.screens.updatescreen
 
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -26,6 +27,7 @@ class UpdateScreenViewModel @Inject constructor(
     var noteTitle = mutableStateOf("")
     var noteBody = mutableStateOf("")
     var selectedCategory = mutableStateOf("")
+    private var selectedColor = mutableLongStateOf(0L)
     var isPinned = mutableStateOf(false)
 
     private val noteIdToUpdate: String = checkNotNull(savedStateHandle["noteId"])
@@ -74,11 +76,16 @@ class UpdateScreenViewModel @Inject constructor(
         noteToUpdate.title =  getNoteTitle()
         noteToUpdate.body = getNoteBody()
         noteToUpdate.isPinned = isPinned.value
+        noteToUpdate.color = selectedColor.longValue
 
         noteRepo.updateNote(noteToUpdate)
+    }
+
+    fun setSelectedColor(it: Long) {
+        selectedColor.longValue = it
     }
 
 }
 
 
-data class UpdatedNoteUiState(val note: Note = Note(0, "", "", false, "", ""))
+data class UpdatedNoteUiState(val note: Note = Note(0, "", "", false, "", 0))
