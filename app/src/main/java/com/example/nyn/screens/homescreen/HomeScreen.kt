@@ -31,7 +31,6 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -82,7 +81,7 @@ fun ScaffoldNYN(modifier: Modifier = Modifier,
             SearchBar(modifier)
 
             // LazyRow of Categories
-            CategoriesLazyRow(modifier)
+            CategoriesLazyRow(modifier,homeScreenViewModel)
 
             // Staggered Grid of notes
             NotesLazyStaggeredGrid(modifier,homeScreenViewModel,navHostController)
@@ -190,7 +189,7 @@ fun NotesLazyStaggeredGrid(modifier: Modifier = Modifier,
                            homeScreenViewModel: HomeScreenViewModel,
                            navHostController: NavHostController,){
 
-    val homeUiState by homeScreenViewModel.homeUiState.collectAsState()
+    val homeUiState by homeScreenViewModel.notesUiState.collectAsState()
 
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),
