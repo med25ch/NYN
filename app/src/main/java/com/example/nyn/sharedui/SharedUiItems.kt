@@ -1,9 +1,13 @@
 package com.example.nyn.sharedui
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Circle
@@ -36,11 +40,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.nyn.ui.theme.Sen
@@ -156,8 +164,9 @@ fun SharedScaffold(
 
                     IconButton(onClick = { onShowColorDialog() }) {
                         Icon(
-                            imageVector = Icons.TwoTone.Circle,
+                            imageVector = Icons.Filled.Circle,
                             contentDescription = "Localized description",
+                            modifier = modifier.border(width = 2.dp, color = Color.LightGray, shape = CircleShape),
                             tint = if (noteColorProvider() != 0L) Color(noteColorProvider()) else Color(0xffc2dcfd)
                         )
                     }
