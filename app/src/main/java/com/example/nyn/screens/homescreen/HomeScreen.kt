@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.nyn.categoryui.CategoriesLazyRow
 import com.example.nyn.navigation.Screen
 import com.example.nyn.noteui.NoteCard
 import com.example.nyn.ui.theme.CustomLightGray
@@ -74,11 +75,14 @@ fun ScaffoldNYN(modifier: Modifier = Modifier,
         Column(
             modifier = modifier
                 .padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
 
             // SearchBar
             SearchBar(modifier)
+
+            // LazyRow of Categories
+            CategoriesLazyRow(modifier)
 
             // Staggered Grid of notes
             NotesLazyStaggeredGrid(modifier,homeScreenViewModel,navHostController)
