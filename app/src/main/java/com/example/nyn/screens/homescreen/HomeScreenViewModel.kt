@@ -46,11 +46,24 @@ class HomeScreenViewModel @Inject constructor(
         val listOfAllCategories = categoriesList.map { it.name }.toList()
         val listOfUsedCategories = notesList.map { it.category }.toList()
 
+        // Add All notes to be an option to show all notes without category filter
+        occurrencesMap["All notes"] = notesList.size
+
         for (item in listOfAllCategories){
             val occurrence = listOfUsedCategories.count {it == item}
             occurrencesMap[item] = occurrence
         }
         return occurrencesMap.map { CategoryOccurrence(it.key,it.value) }
+    }
+
+    fun getNotesByCategory(category: String): StateFlow<NoteUiState> {
+
+        return repo.getNotesStreamByCategory(category).map { NoteUiState(it) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = NoteUiState()
+            )
     }
 
 }

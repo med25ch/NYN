@@ -55,7 +55,9 @@ fun ScaffoldNYN(modifier: Modifier = Modifier,
                 navHostController: NavHostController,
                 homeScreenViewModel: HomeScreenViewModel
 ) {
+
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    var categoryToFilter by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -81,10 +83,10 @@ fun ScaffoldNYN(modifier: Modifier = Modifier,
             SearchBar(modifier)
 
             // LazyRow of Categories
-            CategoriesLazyRow(modifier,homeScreenViewModel)
+            CategoriesLazyRow(modifier,homeScreenViewModel, onCategoryClick = { categoryToFilter = it })
 
             // Staggered Grid of notes
-            NotesLazyStaggeredGrid(modifier,homeScreenViewModel,navHostController)
+            NotesLazyStaggeredGrid(modifier,homeScreenViewModel,navHostController,categoryToFilter)
         }
     }
 }
@@ -185,18 +187,25 @@ fun SearchBar(modifier: Modifier = Modifier){
 }
 
 @Composable
-fun NotesLazyStaggeredGrid(modifier: Modifier = Modifier,
-                           homeScreenViewModel: HomeScreenViewModel,
-                           navHostController: NavHostController,){
+fun NotesLazyStaggeredGrid(
+    modifier: Modifier = Modifier,
+    homeScreenViewModel: HomeScreenViewModel,
+    navHostController: NavHostController,
+    categoryToFilter: String,){
 
-    val homeUiState by homeScreenViewModel.notesUiState.collectAsState()
+    val allNotesUiState by
+        if (categoryToFilter.isEmpty() || categoryToFilter == "All notes")
+            homeScreenViewModel.notesUiState.collectAsState()
+        else
+            homeScreenViewModel.getNotesByCategory(categoryToFilter).collectAsState()
+
 
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),
         verticalItemSpacing = 4.dp,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         content = {
-            items(items = homeUiState.notesList) {note ->
+            items(items = allNotesUiState.notesList) { note ->
                 NoteCard(note = note, onCardClick = { navHostController.navigate(Screen.UPDATE_NOTE.name + "/${note.id}") })
             }
         }
