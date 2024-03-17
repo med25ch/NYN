@@ -57,7 +57,10 @@ fun ScaffoldNYN(modifier: Modifier = Modifier,
 ) {
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-    var categoryToFilter by remember { mutableStateOf("") }
+
+
+    //TODO
+    //Read categoryToFilter from dataStore
 
     Scaffold(
         topBar = {
@@ -83,10 +86,10 @@ fun ScaffoldNYN(modifier: Modifier = Modifier,
             SearchBar(modifier)
 
             // LazyRow of Categories
-            CategoriesLazyRow(modifier,homeScreenViewModel, onCategoryClick = { categoryToFilter = it })
+            CategoriesLazyRow(modifier,homeScreenViewModel)
 
             // Staggered Grid of notes
-            NotesLazyStaggeredGrid(modifier,homeScreenViewModel,navHostController,categoryToFilter)
+            NotesLazyStaggeredGrid(modifier,homeScreenViewModel,navHostController)
         }
     }
 }
@@ -190,15 +193,9 @@ fun SearchBar(modifier: Modifier = Modifier){
 fun NotesLazyStaggeredGrid(
     modifier: Modifier = Modifier,
     homeScreenViewModel: HomeScreenViewModel,
-    navHostController: NavHostController,
-    categoryToFilter: String,){
+    navHostController: NavHostController){
 
-    val allNotesUiState by
-        if (categoryToFilter.isEmpty() || categoryToFilter == "All notes")
-            homeScreenViewModel.notesUiState.collectAsState()
-        else
-            homeScreenViewModel.getNotesByCategory(categoryToFilter).collectAsState()
-
+    val allNotesUiState by homeScreenViewModel.notesUiFlowCombined.collectAsState()
 
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),
