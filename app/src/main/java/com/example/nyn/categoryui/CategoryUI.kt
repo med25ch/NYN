@@ -16,8 +16,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,13 +32,14 @@ import com.example.nyn.screens.homescreen.CategoryOccurrence
 import com.example.nyn.screens.homescreen.HomeScreenViewModel
 import com.example.nyn.ui.theme.Sen
 import com.example.nyn.ui.theme.VeryLightGray
+import kotlinx.coroutines.selects.select
 
 @Composable
 fun CategoryCard(modifier: Modifier = Modifier,
                  categoryOccurrence: CategoryOccurrence,
-                 onCategoryClick : (String) -> Unit) {
+                 onCategoryClick : (String) -> Unit,
+                 selected : Boolean) {
 
-    var selected by remember { mutableStateOf(false) }
 
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
@@ -44,9 +47,8 @@ fun CategoryCard(modifier: Modifier = Modifier,
         ),
         modifier = modifier.clickable {
             onCategoryClick(categoryOccurrence.categoryName)
-            selected = !selected
         },
-        //colors = CardDefaults.cardColors(containerColor = if (selected) Color(0xfffcfad9) else Color(0xffc2dcfd))
+        colors = CardDefaults.cardColors(containerColor = if (selected) Color(0xfffcfad9) else Color(0xffc2dcfd))
     ) {
 
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -74,19 +76,30 @@ fun CategoryCard(modifier: Modifier = Modifier,
 
 @Composable
 fun CategoriesLazyRow(modifier: Modifier = Modifier,
-                      homeScreenViewModel: HomeScreenViewModel,
-                      onCategoryClick : (String) -> Unit){
+                      homeScreenViewModel: HomeScreenViewModel){
 
     val categoriesUiState by homeScreenViewModel.categoriesUiState.collectAsState()
     val notesUiState by homeScreenViewModel.notesUiState.collectAsState()
+    val selectedCategory by homeScreenViewModel.sortingUiState.collectAsState()
     val categoriesOccurrences = homeScreenViewModel.getCategoriesCount(categoriesUiState.repoList,notesUiState.notesList)
 
+
+
+    // Use datastore to fix this problem
 
     LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp),
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
         content = {
             items(categoriesOccurrences) {category ->
-                CategoryCard(categoryOccurrence = category, onCategoryClick = { onCategoryClick(it) })
+                CategoryCard(
+                    categoryOccurrence = category,
+                    onCategoryClick = {
+                        //Write to category to datastore
+                        homeScreenViewModel.updateCategorySorting(it)
+                        //selectedCategory = if( selectedCategory != category.categoryName) category.categoryName else "All notes"
+                    },
+                    selected = selectedCategory.sortCategoryString == category.categoryName
+                )
             }
         })
 }

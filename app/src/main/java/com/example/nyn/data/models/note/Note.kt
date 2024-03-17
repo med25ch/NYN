@@ -1,9 +1,8 @@
 package com.example.nyn.data.models.note
 
-import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.nyn.data.models.category.NoteCategory
+import com.example.nyn.data.constants.DataConstants.ALL_NOTES
 
 @Entity(tableName = "notes_table")
 data class Note(
@@ -12,6 +11,6 @@ data class Note(
     var title : String,
     var body : String,
     var isPinned : Boolean,
-    var category: String,
+    var category: String = ALL_NOTES,
     var color : Long,
     /*val user : User?*/)
