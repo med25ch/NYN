@@ -3,19 +3,18 @@ package com.example.nyn.screens.homescreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nyn.data.constants.DataConstants.ALL_NOTES
-import com.example.nyn.data.models.category.NoteCategory
 import com.example.nyn.data.models.note.Note
 import com.example.nyn.data.repositories.OfflineCategoriesRepository
 import com.example.nyn.data.repositories.OfflineNotesRepository
 import com.example.nyn.di.UserPreferences
 import com.example.nyn.di.UserPreferencesRepository
-import com.example.nyn.screens.addnotescreen.CategoriesUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,7 +30,7 @@ class HomeScreenViewModel @Inject constructor(
         private const val TIMEOUT_MILLIS = 5_000L
     }
 
-    val notesUiState: StateFlow<NoteUiState> =
+    private val notesUiState: StateFlow<NoteUiState> =
         repo.getAllNotesStream().map { NoteUiState(it) }
             .stateIn(
                 scope = viewModelScope,
@@ -39,12 +38,27 @@ class HomeScreenViewModel @Inject constructor(
                 initialValue = NoteUiState()
             )
 
-    val categoriesUiState: StateFlow<CategoriesUiState> =
-        categoryRepo.getAllNoteCategoriesStream().map { CategoriesUiState(it) }
+    val categoriesUiState: StateFlow<CategoriesCountUiState> =
+        categoryRepo.getAllNoteCategoriesStream().zip(repo.getAllNotesStream())
+        { categoriesList,notesList ->
+            val occurrencesMap = mutableMapOf<String,Int>()
+            val listOfAllCategories = categoriesList.map { it.name }.toList()
+            val listOfUsedCategories = notesList.map { it.category }.toList()
+
+            // Add All notes to be an option to show all notes without category filter
+            occurrencesMap[ALL_NOTES] = notesList.size
+
+            for (item in listOfAllCategories){
+                val occurrence = listOfUsedCategories.count {it == item}
+                occurrencesMap[item] = occurrence
+            }
+            return@zip occurrencesMap.map { CategoryOccurrence(it.key,it.value) }
+        }
+            .map { CategoriesCountUiState(it) }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                initialValue = CategoriesUiState()
+                initialValue = CategoriesCountUiState()
             )
 
     val sortingUiState: StateFlow<UserPreferences> =
@@ -54,21 +68,6 @@ class HomeScreenViewModel @Inject constructor(
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = UserPreferences()
             )
-
-    fun getCategoriesCount(categoriesList :List<NoteCategory>,notesList : List<Note>) : List<CategoryOccurrence>{
-        val occurrencesMap = mutableMapOf<String,Int>()
-        val listOfAllCategories = categoriesList.map { it.name }.toList()
-        val listOfUsedCategories = notesList.map { it.category }.toList()
-
-        // Add All notes to be an option to show all notes without category filter
-        occurrencesMap[ALL_NOTES] = notesList.size
-
-        for (item in listOfAllCategories){
-            val occurrence = listOfUsedCategories.count {it == item}
-            occurrencesMap[item] = occurrence
-        }
-        return occurrencesMap.map { CategoryOccurrence(it.key,it.value) }
-    }
 
     fun updateCategorySorting(category: String){
         viewModelScope.launch {
@@ -94,9 +93,10 @@ class HomeScreenViewModel @Inject constructor(
 
 }
 
-/**
- * Ui State for NoteCard
- */
+
+
 data class NoteUiState(val notesList: List<Note> = listOf())
+
+data class CategoriesCountUiState(val categoryOccurrenceList: List<CategoryOccurrence> = listOf())
 data class CategoryOccurrence(val categoryName : String, val count : Int)
 data class NoteUiStateFil(val notesList: List<Note> = listOf(), val category: String = "")
