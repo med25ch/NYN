@@ -40,6 +40,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.nyn.categoryui.CategoriesLazyRow
 import com.example.nyn.navigation.Screen
@@ -57,10 +58,6 @@ fun ScaffoldNYN(modifier: Modifier = Modifier,
 ) {
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-
-
-    //TODO
-    //Read categoryToFilter from dataStore
 
     Scaffold(
         topBar = {
@@ -83,7 +80,7 @@ fun ScaffoldNYN(modifier: Modifier = Modifier,
         ) {
 
             // SearchBar
-            SearchBar(modifier)
+            SearchBar(modifier, homeScreenViewModel)
 
             // LazyRow of Categories
             CategoriesLazyRow(modifier,homeScreenViewModel)
@@ -136,7 +133,7 @@ fun SmallTopAppBar(modifier: Modifier = Modifier, scrollBehavior: TopAppBarScrol
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBar(modifier: Modifier = Modifier){
+fun SearchBar(modifier: Modifier = Modifier, homeScreenViewModel: HomeScreenViewModel){
     // this is the text users enter
     var queryString by remember {
         mutableStateOf("")
@@ -148,6 +145,9 @@ fun SearchBar(modifier: Modifier = Modifier){
     }
 
     val contextForToast = LocalContext.current.applicationContext
+
+    //Update the search query
+    homeScreenViewModel.updateSearchQuery(queryString)
 
     SearchBar(
         modifier = modifier
