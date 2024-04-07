@@ -1,5 +1,6 @@
 package com.example.nyn.screens.homescreen
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nyn.data.constants.DataConstants.ALL_NOTES
@@ -9,8 +10,10 @@ import com.example.nyn.data.repositories.OfflineNotesRepository
 import com.example.nyn.di.UserPreferences
 import com.example.nyn.di.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -28,6 +31,15 @@ class HomeScreenViewModel @Inject constructor(
 
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L
+    }
+
+
+    private val _searchQuery = MutableStateFlow("")
+
+    private val searchQuery = _searchQuery.asStateFlow()
+
+    fun updateSearchQuery(query : String){
+        _searchQuery.value = query
     }
 
     private val notesUiState: StateFlow<NoteUiState> =
@@ -75,16 +87,17 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    val notesUiFlowCombined : StateFlow<NoteUiStateFil> = notesUiState.combine(sortingUiState)
-    { notesUiState,userPreferences ->
+    val notesUiFlowCombined : StateFlow<NoteUiStateFil> = combine(notesUiState,sortingUiState,searchQuery)
+    { notesUiState,userPreferences , searchQuery ->
 
         if (userPreferences.sortCategoryString == ALL_NOTES){
             return@combine NoteUiStateFil(
-                notesList = notesUiState.notesList,
+                notesList = notesUiState.notesList.filter { it.body.contains(searchQuery,true) },
                 category = userPreferences.sortCategoryString)
         }else{
             return@combine NoteUiStateFil(
-                notesList = notesUiState.notesList.filter { it.category == userPreferences.sortCategoryString },
+                notesList = notesUiState.notesList.filter {
+                    it.category == userPreferences.sortCategoryString && it.body.contains(searchQuery,true)},
                 category = userPreferences.sortCategoryString)
         }
 
