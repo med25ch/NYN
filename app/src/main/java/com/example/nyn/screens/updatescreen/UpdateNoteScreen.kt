@@ -10,6 +10,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.example.nyn.screens.dialogscreen.ColorPickerDialog
 import com.example.nyn.sharedui.SharedScaffold
@@ -26,6 +27,7 @@ fun UpdateNoteScreenScaffold(modifier: Modifier = Modifier,
 
 
     val coroutineScope = rememberCoroutineScope()
+    val mContext = LocalContext.current
 
 
     if(!updateScreenViewModel.initExecuted.value)
@@ -53,7 +55,11 @@ fun UpdateNoteScreenScaffold(modifier: Modifier = Modifier,
         onBodyTextValueChange = { updateScreenViewModel.updateNoteBody(it) },
         bodyTextProvider = { updateScreenViewModel.getNoteBody() },
         pinStateProvider = { updateScreenViewModel.getPinState() },
-        noteColorProvider = { updateScreenViewModel.getSelectedColor() }
+        noteColorProvider = { updateScreenViewModel.getSelectedColor() },
+        enableShareNoteBody = true,
+        onClickShareNote = {
+            mContext.startActivity(updateScreenViewModel.getNoteBodyIntent())
+        }
     )
 }
 

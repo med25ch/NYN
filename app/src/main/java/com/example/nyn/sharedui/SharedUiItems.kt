@@ -1,7 +1,5 @@
 package com.example.nyn.sharedui
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,16 +10,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.PushPin
-import androidx.compose.material.icons.outlined.Circle
-import androidx.compose.material.icons.outlined.ColorLens
-import androidx.compose.material.icons.outlined.Colorize
 import androidx.compose.material.icons.outlined.CreateNewFolder
-import androidx.compose.material.icons.outlined.FormatColorFill
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Save
-import androidx.compose.material.icons.rounded.Circle
-import androidx.compose.material.icons.rounded.FlagCircle
-import androidx.compose.material.icons.twotone.Circle
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,16 +26,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -127,7 +112,9 @@ fun SharedScaffold(
     onBodyTextValueChange : (String) -> Unit,
     bodyTextProvider : () -> String,
     pinStateProvider : () -> Boolean,
-    noteColorProvider : () -> Long
+    noteColorProvider : () -> Long,
+    enableShareNoteBody : Boolean,
+    onClickShareNote : () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
@@ -192,6 +179,19 @@ fun SharedScaffold(
                             imageVector = Icons.Outlined.Save,
                             contentDescription = "Localized description"
                         )
+                    }
+
+                    if (enableShareNoteBody){
+                        IconButton(
+                            onClick = {
+                                onClickShareNote()
+                            },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Share,
+                                contentDescription = "Localized description"
+                            )
+                        }
                     }
                 },
                 scrollBehavior = scrollBehavior,
