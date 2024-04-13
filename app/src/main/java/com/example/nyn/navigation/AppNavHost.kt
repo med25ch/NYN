@@ -19,7 +19,7 @@ import com.example.nyn.screens.updatescreen.UpdateScreenViewModel
 
 
 @Composable
-fun AppNavHost(
+fun  AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     startDestination: String = NavigationItem.HomeScreen.route,

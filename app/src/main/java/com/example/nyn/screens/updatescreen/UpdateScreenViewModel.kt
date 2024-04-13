@@ -1,5 +1,6 @@
 package com.example.nyn.screens.updatescreen
 
+import android.content.Intent
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -96,6 +97,16 @@ class UpdateScreenViewModel @Inject constructor(
 
     fun getSelectedColor() : Long{
         return selectedColor.longValue
+    }
+
+    fun getNoteBodyIntent(): Intent {
+
+        val sendIntent = Intent(Intent.ACTION_SEND).apply {
+            putExtra(Intent.EXTRA_TEXT, noteBody.value)
+            type = "text/plain"
+        }
+
+        return Intent.createChooser(sendIntent, null)
     }
 }
 

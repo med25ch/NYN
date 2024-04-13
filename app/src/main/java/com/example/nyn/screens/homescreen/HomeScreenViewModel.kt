@@ -92,12 +92,12 @@ class HomeScreenViewModel @Inject constructor(
 
         if (userPreferences.sortCategoryString == ALL_NOTES){
             return@combine NoteUiStateFil(
-                notesList = notesUiState.notesList.filter { it.body.contains(searchQuery,true) },
+                notesList = notesUiState.notesList.filter { it.title.contains(searchQuery,true) },
                 category = userPreferences.sortCategoryString)
         }else{
             return@combine NoteUiStateFil(
                 notesList = notesUiState.notesList.filter {
-                    it.category == userPreferences.sortCategoryString && it.body.contains(searchQuery,true)},
+                    it.category == userPreferences.sortCategoryString && it.title.contains(searchQuery,true)},
                 category = userPreferences.sortCategoryString)
         }
 

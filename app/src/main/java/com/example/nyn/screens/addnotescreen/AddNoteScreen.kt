@@ -41,7 +41,9 @@ fun AddNoteScreenScaffold(modifier: Modifier = Modifier,
         onBodyTextValueChange = { addNoteViewModel.updateNoteBody(it)},
         bodyTextProvider = { addNoteViewModel.noteBody.value },
         pinStateProvider = { addNoteViewModel.isPinned.value },
-        noteColorProvider = { addNoteViewModel.getSelectedColor() }
+        noteColorProvider = { addNoteViewModel.getSelectedColor() },
+        enableShareNoteBody = false,
+        onClickShareNote = {}
     )
 }
 
