@@ -10,7 +10,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import com.example.nyn.screens.dialogscreen.ColorPickerDialog
+import com.example.nyn.screens.dialogs.ColorPickerDialog
 import com.example.nyn.sharedui.SharedScaffold
 import kotlinx.coroutines.launch
 

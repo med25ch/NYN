@@ -33,6 +33,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,14 +41,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.nyn.categoryui.CategoriesLazyRow
+import com.example.nyn.data.models.note.Note
 import com.example.nyn.navigation.Screen
 import com.example.nyn.noteui.NoteCard
+import com.example.nyn.screens.dialogs.DeleteNoteDialog
 import com.example.nyn.ui.theme.CustomLightGray
 import com.example.nyn.ui.theme.Sen
 import com.example.nyn.ui.theme.VeryLightGray
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -196,6 +199,19 @@ fun NotesLazyStaggeredGrid(
     navHostController: NavHostController){
 
     val allNotesUiState by homeScreenViewModel.notesUiFlowCombined.collectAsState()
+    var openDeleteNoteDialog by remember { mutableStateOf(false) }
+    var noteToDelete by remember { mutableStateOf(Note(id = -1, title = "", body = "",isPinned = false, color = 0)) }
+    val coroutineScope = rememberCoroutineScope()
+
+    if (openDeleteNoteDialog){
+        DeleteNoteDialog(
+            onDismissRequest = { openDeleteNoteDialog = it},
+            onConfirmation = {
+                coroutineScope.launch {
+                    homeScreenViewModel.deleteNote(noteToDelete)
+                }
+            })
+    }
 
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),
@@ -203,7 +219,13 @@ fun NotesLazyStaggeredGrid(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         content = {
             items(items = allNotesUiState.notesList) { note ->
-                NoteCard(note = note, onCardClick = { navHostController.navigate(Screen.UPDATE_NOTE.name + "/${note.id}") })
+                NoteCard(
+                    note = note,
+                    onCardClick = { navHostController.navigate(Screen.UPDATE_NOTE.name + "/${note.id}") },
+                    onCardLongClick = {
+                        noteToDelete = note
+                        openDeleteNoteDialog = it
+                    })
             }
         }
     )

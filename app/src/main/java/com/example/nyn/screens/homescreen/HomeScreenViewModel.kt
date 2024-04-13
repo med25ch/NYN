@@ -51,7 +51,7 @@ class HomeScreenViewModel @Inject constructor(
             )
 
     val categoriesUiState: StateFlow<CategoriesCountUiState> =
-        categoryRepo.getAllNoteCategoriesStream().zip(repo.getAllNotesStream())
+        categoryRepo.getAllNoteCategoriesStream().combine(repo.getAllNotesStream())
         { categoriesList,notesList ->
             val occurrencesMap = mutableMapOf<String,Int>()
             val listOfAllCategories = categoriesList.map { it.name }.toList()
@@ -64,7 +64,7 @@ class HomeScreenViewModel @Inject constructor(
                 val occurrence = listOfUsedCategories.count {it == item}
                 occurrencesMap[item] = occurrence
             }
-            return@zip occurrencesMap.map { CategoryOccurrence(it.key,it.value) }
+            return@combine occurrencesMap.map { CategoryOccurrence(it.key,it.value) }
         }
             .map { CategoriesCountUiState(it) }
             .stateIn(
@@ -102,6 +102,11 @@ class HomeScreenViewModel @Inject constructor(
         }
 
     }.stateIn(viewModelScope,SharingStarted.Eagerly,NoteUiStateFil())
+
+
+    suspend fun deleteNote(note: Note){
+        repo.deleteNote(note)
+    }
 
 
 }

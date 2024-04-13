@@ -76,7 +76,7 @@ fun CategoriesLazyRow(modifier: Modifier = Modifier,
     LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp),
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
         content = {
-            items(categoriesUiState.categoryOccurrenceList) { category ->
+                items(categoriesUiState.categoryOccurrenceList) { category ->
                 CategoryCard(
                     categoryOccurrence = category,
                     onCategoryClick = {
