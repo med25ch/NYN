@@ -47,9 +47,7 @@ import com.example.nyn.data.models.note.Note
 import com.example.nyn.navigation.Screen
 import com.example.nyn.noteui.NoteCard
 import com.example.nyn.screens.dialogs.DeleteNoteDialog
-import com.example.nyn.ui.theme.CustomLightGray
 import com.example.nyn.ui.theme.Sen
-import com.example.nyn.ui.theme.VeryLightGray
 import kotlinx.coroutines.launch
 
 
@@ -68,8 +66,8 @@ fun ScaffoldNYN(modifier: Modifier = Modifier,
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { navHostController.navigate(Screen.ADD_NOTE.name) },
-                containerColor = Color.DarkGray,
-                contentColor = Color.White,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
@@ -111,7 +109,7 @@ fun HomeScreen(modifier: Modifier = Modifier,
 fun SmallTopAppBar(modifier: Modifier = Modifier, scrollBehavior: TopAppBarScrollBehavior){
     TopAppBar(
         colors = topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.background,
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         title = {
@@ -175,16 +173,13 @@ fun SearchBar(modifier: Modifier = Modifier, homeScreenViewModel: HomeScreenView
                 fontFamily = Sen,
                 fontWeight = FontWeight.Light,
                 fontStyle = FontStyle.Normal,
-                color = CustomLightGray,
                 modifier = modifier.height(16.dp))
         },
         leadingIcon = {
             Icon(imageVector = Icons.Default.Search,
-                contentDescription = null,
-                tint = CustomLightGray)
+                contentDescription = null,)
         },
         colors = SearchBarDefaults.colors(
-            containerColor = VeryLightGray
         ),
         shape = RoundedCornerShape(8.dp)
     ) {

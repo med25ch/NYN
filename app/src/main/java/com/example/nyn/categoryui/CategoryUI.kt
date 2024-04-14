@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -40,7 +41,9 @@ fun CategoryCard(modifier: Modifier = Modifier,
         modifier = modifier.clickable {
             onCategoryClick(categoryOccurrence.categoryName)
         },
-        colors = CardDefaults.cardColors(containerColor = if (selected) Color(0xfffcfad9) else Color(0xffc2dcfd))
+        colors = CardDefaults.cardColors(containerColor = if (selected)
+            MaterialTheme.colorScheme.primaryContainer
+        else MaterialTheme.colorScheme.surfaceVariant)
     ) {
 
         Row(verticalAlignment = Alignment.CenterVertically) {
