@@ -25,6 +25,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -78,41 +79,46 @@ fun BottomSheet(onDismiss: () -> Unit,
 @Composable
 fun AddNewCategoryUi(modifier: Modifier = Modifier,onSaveCategory: (String) -> Unit){
     //Category input
-    var value by rememberSaveable { mutableStateOf("add a new category") }
+    var value by rememberSaveable { mutableStateOf("") }
 
-        Box (modifier = modifier.padding(8.dp)){
-            BasicTextField(
-                value = value,
-                onValueChange = { value = it },
-                textStyle = TextStyle(
-                    fontFamily = Sen,
-                    fontWeight = FontWeight.Light,
-                ),
-                decorationBox = { innerTextField ->
-                    // Because the decorationBox is used, the whole Row gets the same behaviour as the
-                    // internal input field would have otherwise. For example, there is no need to add a
-                    // Modifier.clickable to the Row anymore to bring the text field into focus when user
-                    // taps on a larger text field area which includes paddings and the icon areas.
-                    Row(modifier= Modifier
-                        .background(
-                            MaterialTheme.colorScheme.surface,
-                            RoundedCornerShape(percent = 20)
-                        )
-                        .padding(8.dp)
-                        .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(Icons.Outlined.AddCircleOutline,
-                            contentDescription = null,
-                            Modifier.clickable {
-                                onSaveCategory(value)
-                            })
-                        Spacer(Modifier.width(16.dp))
-                        innerTextField()
+        Surface {
+            Box (modifier = modifier.padding(8.dp)){
+                BasicTextField(
+                    value = value,
+                    onValueChange = { value = it },
+                    textStyle = TextStyle(
+                        fontFamily = Sen,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontWeight = FontWeight.Light,
+                    ),
+                    decorationBox = { innerTextField ->
+                        // Because the decorationBox is used, the whole Row gets the same behaviour as the
+                        // internal input field would have otherwise. For example, there is no need to add a
+                        // Modifier.clickable to the Row anymore to bring the text field into focus when user
+                        // taps on a larger text field area which includes paddings and the icon areas.
+                        Row(modifier= Modifier
+                            .background(
+                                MaterialTheme.colorScheme.secondaryContainer,
+                                shape = RoundedCornerShape(percent = 20)
+                            )
+                            .padding(8.dp)
+                            .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(Icons.Outlined.AddCircleOutline,
+                                contentDescription = null,
+                                Modifier.clickable {
+                                    onSaveCategory(value)
+                                },
+                                tint = MaterialTheme.colorScheme.primary)
+                            Spacer(Modifier.width(16.dp))
+                            innerTextField()
+                        }
                     }
-                }
-            )
+                )
+            }
         }
+
 }
 
 @Composable
@@ -160,7 +166,7 @@ fun CategoryRow(modifier: Modifier = Modifier,
         ) {
             Icon(imageVector = if (selected) Icons.Filled.CheckCircle else Icons.Outlined.CheckCircle,
                 contentDescription = null,
-                tint = if (selected) Color.Black else Color.LightGray,
+                tint = if (selected) MaterialTheme.colorScheme.primary else Color.LightGray,
                 modifier = modifier.padding(end = 16.dp)
             )
             Text(text = noteCategory.name, fontFamily = Sen, fontWeight = FontWeight.SemiBold,)

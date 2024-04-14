@@ -1,9 +1,7 @@
 package com.example.nyn.noteui
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
@@ -21,10 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
@@ -33,8 +27,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.nyn.data.models.note.Note
-import com.example.nyn.screens.dialogs.DeleteNoteDialog
-import com.example.nyn.ui.theme.CustomLightGray
 import com.example.nyn.ui.theme.Sen
 
 
@@ -57,9 +49,9 @@ fun NoteCard(modifier: Modifier = Modifier,
                 }
             )
         ,
-         border = BorderStroke(1.dp, Color.LightGray),
+         border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
          colors = CardDefaults.cardColors(
-             containerColor = if(note.color != 0L) Color(note.color) else MaterialTheme.colorScheme.surfaceVariant
+             containerColor = if(note.color != 0L) Color(note.color) else MaterialTheme.colorScheme.primary
          )
     ) {
         Column(
@@ -84,7 +76,7 @@ fun NoteCard(modifier: Modifier = Modifier,
                     tint = if (note.isPinned)
                         Color.Red
                     else
-                        CustomLightGray
+                        Color.LightGray
                         ,
                     modifier = modifier
                         .rotate(45f)
